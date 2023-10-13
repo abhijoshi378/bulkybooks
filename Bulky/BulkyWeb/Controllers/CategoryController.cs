@@ -17,5 +17,27 @@ namespace BulkyWeb.Controllers
             List<Category> categories = _db.Categories.ToList();
             return View(categories);
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Category category)
+        {
+            if (category.Name == category.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("Name", "The Display Order and Name must not be same.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _db.Categories.Add(category);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
     }
 }
