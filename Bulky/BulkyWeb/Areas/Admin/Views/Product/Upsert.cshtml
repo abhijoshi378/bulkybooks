@@ -55,6 +55,7 @@
                         <div class="form-floating py-2 cpl-12">
                             <input type="file" name="file" class="form-control border-0 shadow" />
                             <label asp-for="Product.ImageURL" class="ms-2"></label>
+                            <input type="hidden" asp-for="Product.ImageURL" />
                         </div>
                         <div class="form-floating py-2 cpl-12">
                             <select asp-for="Product.CategoryId" asp-items="Model.CategoryList" class="form-control border-0 shadow">
