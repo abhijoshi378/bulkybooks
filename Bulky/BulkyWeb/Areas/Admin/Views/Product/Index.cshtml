@@ -12,7 +12,7 @@
                 <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Create New Product</a>
             </div>
         </div>
-        <table class="table table-bordered table-striped">
+        <table id="tblProducts" class="table table-bordered table-striped" style="width:100%;">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -23,24 +23,10 @@
                     <td></td>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var product in Model)
-                {
-                    <tr>
-                        <td>@product.Title</td>
-                        <td>@product.ISBN</td>
-                        <td>@product.ListPrice</td>
-                        <td>@product.Author</td>
-                        <td>@product.Category.Name</td>
-                        <td class="text-center">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Product" asp-action="Upsert" asp-route-id="@product.Id" class="btn btn-primary"><i class="bi bi-pencil-square"></i> Edit</a>
-                                <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger"><i class="bi bi-trash"></i> Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/product.js"></script>
+}
