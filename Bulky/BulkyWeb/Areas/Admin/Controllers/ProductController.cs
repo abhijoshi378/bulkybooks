@@ -82,6 +82,10 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 }
                 else
                 {
+                    if (string.IsNullOrEmpty(productVM.Product.ImageURL))
+                    {
+                        productVM.Product.ImageURL = string.Empty;
+                    }
                     _unitOfWork.Product.Add(productVM.Product);
                     _unitOfWork.Save();
                     TempData["Success"] = "Product created successfully";
@@ -100,40 +104,32 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return View(productVM);
         }
 
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Product? product = _unitOfWork.Product.Get(x => x.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
-        [HttpPost]
-        public IActionResult DeletePost(int? id)
-        {
-            Product? product = _unitOfWork.Product.Get(x => x.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            _unitOfWork.Product.Remove(product);
-            _unitOfWork.Save();
-            TempData["Success"] = "Product deleted successfully";
-            return RedirectToAction("Index");
-        }
-
         #region API Calls
         [HttpGet]
         public IActionResult GetAll()
         {
             List<Product> products = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
             return Json(new { data = products });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            Product? product = _unitOfWork.Product.Get(x => x.Id == id);
+            if (product == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            var oldImagePath = Path.Combine(wwwRootPath, product.ImageURL.Trim('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+            _unitOfWork.Product.Remove(product);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Product deleted successfully" });
         }
         #endregion
     }
