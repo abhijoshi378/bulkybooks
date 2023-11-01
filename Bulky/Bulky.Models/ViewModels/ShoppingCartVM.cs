@@ -3,6 +3,7 @@
     public class ShoppingCartVM
     {
         public List<ShoppingCart> shoppingCartList { get; set;}
-        public double OrderTotal { get; set;}
+        public OrderHeader OrderHeader { get; set;}
+        public OrderDetail OrderDetail { get; set;}
     }
 }
